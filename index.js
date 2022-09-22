@@ -127,5 +127,30 @@ app.put("/books/:bookId/", async (request, response) => {
     WHERE
       book_id = ${bookId};`;
   await db.run(updateBookQuery);
-  response.send("Book updated sucessfully");
+  response.send("Book updated successfully");
+});
+
+app.delete("/books/:bookId/", async (request, response) => {
+  const { bookId } = request.params;
+  const deleteBookQuery = `
+    DELETE FROM
+        book
+    WHERE
+        book_id = ${bookId};`;
+  await db.run(deleteBookQuery);
+  response.send("Book Delete successfully");
+});
+
+app.get("/authors/:authorId/books/", async (request, response) => {
+  const { authorId } = request.params;
+
+  const getAuthorBooksQuery = `
+    SELECT
+    *
+    FROM
+        book
+    WHERE
+        author_id = ${authorId};`;
+  const booksArray = await db.get(getAuthorBooksQuery);
+  response.send(booksArray);
 });
